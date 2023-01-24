@@ -1,0 +1,27 @@
+{
+  "name": "foundations_project",
+  "version": "1.0.0",
+  "description": "Foundations Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gsned22/foundations_project.git"
+  },
+  "author": "Garrett Snedeker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gsned22/foundations_project/issues"
+  },
+  "homepage": "https://github.com/Gsned22/foundations_project#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1298.0",
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "uuidv4": "^6.2.13"
+  }
+}
