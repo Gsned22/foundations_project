@@ -37,6 +37,23 @@ function updateRoleByUsername(username, role){
 
 }
 
+// function updateUserInfoByUsername(username, fullName, address, phoneNum){
+//       const params = {
+//         TableName: 'users',
+//         Key: {
+//             username
+//         },
+//         UpdateExpression: 'set #n = :value',
+//         ExpressionAttributeNames: {
+//             '#n': 'role'
+//         },
+//         ExpressionAttributeValues: {
+//             ':value': role
+//         }
+//     };
+//     return docClient.update(params).promise();
+// }
+
 function registerNewUser(username, password, email){
     const params = {
         TableName: 'users',

@@ -55,6 +55,9 @@ router.get('/forgot/password', async (req, res) => {
      }
 });
 
-
+// retrieveUserByEmail('user123@thiscompany.com').then((data) => {
+//     // console.log(data);
+//     console.log(data.Items[0].email)
+// })
 
 module.exports = router;

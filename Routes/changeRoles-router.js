@@ -19,7 +19,7 @@ router.patch('/:username/role', async (req, res) =>{
             }else{
                 res.statusCode = 404;
                 res.send({
-                    "message": `User with username: ${req.body.username} does not exist`
+                    "message": `User with username: ${req.params.username} does not exist`
                 })
             }
         } 

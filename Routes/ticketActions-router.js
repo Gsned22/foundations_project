@@ -3,6 +3,7 @@ const router = express.Router();
 const ticketDAO = require('../DAO/ticket-dao')
 const JWT = require('../utility/user-jwt-util')
 
+//employee feature
 router.post('/tickets/submit', async (req, res) => {
     try{
         const token = req.headers.authorization.split(' ')[1];
@@ -25,6 +26,7 @@ router.post('/tickets/submit', async (req, res) => {
     }
 })
 
+//manager feature
 router.patch('/tickets/process', async (req, res) => {
     try{
         const token = req.headers.authorization.split(' ')[1];
@@ -34,12 +36,17 @@ router.patch('/tickets/process', async (req, res) => {
             let data = await ticketDAO.retrieveTicketByID(req.body.ticket_id);
             const userItem = data.Item;
             
-            if(userItem.ticket_status === 'pending'){ //checks if there are pending tickets + only allow for changing those that are pending
+            //makes sure they are not approving their own ticket
+            if(userItem.ticket_status === 'pending' && userItem.employee_username !== payload.username){ //checks if there are pending tickets + only allow for changing those that are pending
                     await ticketDAO.approveOrDenyTicketByTicketID(req.body.ticket_id, req.body.ticket_status);
                     res.send({
                         "message": `${req.body.ticket_status} ticket with ID: ${req.body.ticket_id}`
                     });
                
+            }else if(userItem.employee_username === payload.username){
+                res.send({
+                    "message": "You can not approve or deny your own reimbursement ticket"
+                })
             }else{
                 res.statusCode = 400;
                 res.send({
@@ -47,7 +54,7 @@ router.patch('/tickets/process', async (req, res) => {
                 })
             }
         } 
-    } catch(err) { // token verification failure
+    } catch{ // token verification failure
         res.statusCode = 401;
         res.send({
             "message": "You do not have the appropriate role of 'manager' to access this operation"
@@ -55,5 +62,15 @@ router.patch('/tickets/process', async (req, res) => {
      }
 })
 
+// //test function: recieve tickets with pending status
+// retrievePendingTickets().then((data) => {
+//     console.log(data);
+// })
+
+// //test function: update ticket status by ticket ID
+// approveOrDenyTicketByTicketID('abc123', 'approved').then(() => {
+//     console.log(` succuessfully updated reimbursement request`)
+// })
 
 module.exports = router;
+

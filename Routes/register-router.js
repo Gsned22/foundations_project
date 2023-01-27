@@ -50,4 +50,13 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
+////test splittling email logic
+// const email = "gs@thiscny.com"
+// const splitEmail = email.split('@')[1];
+// if(splitEmail !== "thiscompany.com"){
+//     console.log("true")
+// }else{
+// console.log(splitEmail)
+// }
 module.exports = router;

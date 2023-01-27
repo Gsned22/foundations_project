@@ -33,4 +33,9 @@ router.post('/login', async (req, res) => {
     } 
 });
 
+// retrieveUserByUsername('user123').then((data) => {
+//         console.log(data);
+//         const userItem = data.Item;
+//         console.log(userItem.email)
+//     })
 module.exports = router;
