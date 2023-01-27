@@ -7,6 +7,26 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 
+function retrieveAllTickets(){
+    const params = {
+        TableName: 'tickets'
+    }
+
+    return docClient.scan(params).promise();
+}
+
+function retrieveTicketByID(ticket_id){
+    const params = {
+        TableName: 'tickets',
+        Key: {
+            ticket_id
+        }
+    };
+
+    return docClient.get(params).promise();
+
+}
+
 function submitTicket(amount, description, employee_username, type){
     const params = {
         TableName: 'tickets',
@@ -23,7 +43,6 @@ function submitTicket(amount, description, employee_username, type){
 
     return docClient.put(params).promise();
 }
-
 function retrievePendingTickets(){
     const params = {
         TableName: 'tickets',
@@ -34,6 +53,22 @@ function retrievePendingTickets(){
         },
         ExpressionAttributeValues: {
             ':value': 'pending'
+        }
+    };
+    
+    return docClient.query(params).promise();
+}
+
+function retrieveTicketStatus(ticket_status){
+    const params = {
+        TableName: 'tickets',
+        IndexName: 'ticket_status-index',
+        KeyConditionExpression: '#c = :value',
+        ExpressionAttributeNames: {
+            '#c': 'ticket_status'
+        },
+        ExpressionAttributeValues: {
+            ':value': ticket_status
         }
     };
     
@@ -91,9 +126,12 @@ function viewTicketsByType(type){
 }
 
 module.exports = {
+    retrieveAllTickets,
     submitTicket,
     retrievePendingTickets,
+    retrieveTicketStatus,
     approveOrDenyTicketByTicketID,
     viewTicketsByUsername,
-    viewTicketsByType
+    viewTicketsByType,
+    retrieveTicketByID
 }

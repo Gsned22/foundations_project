@@ -1,0 +1,61 @@
+const express = require('express');
+const router = express.Router();
+const ticketDAO = require('../DAO/ticket-dao')
+const JWT = require('../utility/user-jwt-util')
+
+// manager view
+router.get('/tickets/manager-view', async (req, res) => {
+    
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        let payload = await JWT.verifyTokenAndReturnPayload(token);
+
+        if (payload.role === 'manager') {
+            if(req.query.ticket_status){
+                let data = await ticketDAO.retrieveTicketStatus(req.query.ticket_status);
+                res.send(data.Items);
+            }else{
+                let data = await ticketDAO.retrieveAllTickets();
+                res.send(data.Items);
+            }
+        }
+
+    } catch(err) { // token verification failure
+        res.statusCode = 401;
+        res.send({
+            "message": "Please login first."
+        })
+     }
+});
+
+// employee view
+router.get('/tickets/employee-view', async (req, res) => {
+    try{
+        const token = req.headers.authorization.split(' ')[1];
+        let payload = await JWT.verifyTokenAndReturnPayload(token);
+
+        if (payload.role === "employee") {
+            let data = await ticketDAO.viewTicketsByUsername(payload.username);
+            const userItem = data.Items;
+            // res.send(userItem)
+            
+            if(req.query.type){ //checks if there is a type query
+                let qData = await ticketDAO.viewTicketsByType(req.query.type);
+                res.send(qData.Items)
+            }else{
+                res.send(userItem)
+            }
+        } else{
+            res.send({
+                "message": "You do not have the appropriate role of 'employee' to access this operation"
+            })
+        }
+    } catch(err) { // token verification failure
+        res.statusCode = 401;
+        res.send({
+            "message": "Server error"
+        })
+     }
+})
+
+module.exports = router;
